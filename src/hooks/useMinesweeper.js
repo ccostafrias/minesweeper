@@ -5,6 +5,8 @@ export function useMinesweeper(size, numMines) {
   const [firstClick, setFirstClick] = useState(true);
   const [isLocked, setIsLocked] = useState(false);
 
+  const delay = 50;
+
   function generateEmptyBoard(s) {
     return Array.from({ length: s }, (_, row) =>
       Array.from({ length: s }, (_, col) => ({
@@ -85,10 +87,11 @@ export function useMinesweeper(size, numMines) {
     if (r < 0 || r >= size || c < 0 || c >= size) return;
 
     const cell = board[r][c];
-    if (!cell || cell.isRevealed || cell.isFlagged || cell.isMine) return;
+    if (!cell || cell.isRevealed || cell.isMine) return;
 
     cell.isRevealed = true;
-    cell.revealDelay = depth * 50; // 50ms por nível
+    cell.isFlagged = false;
+    cell.revealDelay = depth * delay; // 50ms por nível
 
     // Revele as células adjacentes se a célula não tiver minas vizinhas
     if (cell.adjacentMines === 0) {

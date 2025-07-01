@@ -19,9 +19,9 @@ export default function Board({ size, mines }) {
           row.map((cell, cIdx) => (
             <Cell
               key={`${rIdx}-${cIdx}`}
+              z={(size - rIdx) * size - cIdx}
               cell={cell}
               onClick={() => {
-                console.log('opa') 
                 revealCell(rIdx, cIdx)}}
               onRightClick={(e) => {
                 e.preventDefault();

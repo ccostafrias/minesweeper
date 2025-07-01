@@ -93,32 +93,22 @@
     cursor: default;
 }
 
-.cell::after {
-    aspect-ratio: 1/1;
-    content: '';
-    pointer-events: none;
+.flag-wrapper {
     position: absolute;
-    border-radius: 5px;
-
+    z-index: 100; /* ou maior, se necessário */
     width: 100%;
-    left: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* importante para não bloquear cliques */
     top: 0;
-    z-index: 5;
-
-    background-image: url('./images/flag.svg');
-    background-size: 75%;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    transform: scale(2);
-    opacity: 0;
-    transition: all .2s ease;
+    left: 0;
 }
 
-.cell.flag::after {
-    transform: scale(1);
-    opacity: 1;
-    transition: all .2s ease;
+.flag-icon {
+    width: 50%;
+    height: 50%;
 }
 
 .mine {

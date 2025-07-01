@@ -9,18 +9,17 @@ export default function Game() {
 
     // Acessando um query parameter específico
     let size, mines
-    const difficult = searchParams.get('difficult');
-    console.log(difficult)
+    const difficulty = searchParams.get('difficulty');
 
-    if (difficult === 'easy') {
+    if (difficulty === 'easy') {
         size = 5
         mines = 8
     }
-    else if (difficult === 'medium') {
+    else if (difficulty === 'medium') {
         size = 10
         mines = 15
     }
-    else if (difficult === 'hard') {
+    else if (difficulty === 'hard') {
         size = 15
         mines = 20
     }

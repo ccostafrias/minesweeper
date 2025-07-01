@@ -1,25 +1,32 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDifficulty } from '../contexts/DifficultyContext';
 import { FaGithub } from "react-icons/fa";
 import "../styles/Home.css"
 
 export default function Home() {
-    const [difficult, setDifficult] = useState('medium')
+    const { difficulty, setDifficulty } = useDifficulty();
     const navigate = useNavigate();
 
     function handleStartGame() {
-        navigate(`/jogo?difficult=${difficult}`);
+        navigate(`/jogo?difficulty=${difficulty}`);
     }
 
     const handleChange = (event) => {
-        const { name, value } = event.target ? event.target : event
+        const { value } = event.target ? event.target : event
 
-        setDifficult(value)
+        setDifficulty(value)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
         // handleStartGame()
+    }
+
+    function handleKeyDown(event, dif) {
+        if (event.key === 'Enter') {
+            setDifficulty(dif)
+        }
     }
 
   return (
@@ -39,7 +46,7 @@ export default function Home() {
                                 name="difficult" 
                                 id="easy" 
                                 value="easy"
-                                checked={difficult === 'easy'}
+                                checked={difficulty === 'easy'}
                                 onChange={handleChange}
                             />
                             <input 
@@ -48,7 +55,7 @@ export default function Home() {
                                 name="difficult" 
                                 id="medium" 
                                 value="medium"
-                                checked={difficult === 'medium'}
+                                checked={difficulty === 'medium'}
                                 onChange={handleChange}
                             />
                             <input 
@@ -57,17 +64,17 @@ export default function Home() {
                                 name="difficult" 
                                 id="hard" 
                                 value="hard"
-                                checked={difficult === 'hard'}
+                                checked={difficulty === 'hard'}
                                 onChange={handleChange}
                             />
                         
-                            <button className={`bttn ${difficult === 'easy' ? 'active' : ''}`}>
+                            <button className={`bttn ${difficulty === 'easy' ? 'active' : ''}`} onKeyDown={(e) => handleKeyDown(e, 'easy')}>
                                 <label className="difficult-label" htmlFor="easy">Easy</label>
                             </button>
-                            <button className={`bttn ${difficult === 'medium' ? 'active' : ''}`}>
+                            <button className={`bttn ${difficulty === 'medium' ? 'active' : ''}`} onKeyDown={(e) => handleKeyDown(e, 'medium')}>
                                 <label className="difficult-label" htmlFor="medium">Medium</label>
                             </button>
-                            <button className={`bttn ${difficult === 'hard' ? 'active' : ''}`}>
+                            <button className={`bttn ${difficulty === 'hard' ? 'active' : ''}`} onKeyDown={(e) => handleKeyDown(e, 'hard')}>
                                 <label className="difficult-label" htmlFor="hard">Hard</label>
                             </button>
                         </div>
