@@ -1,0 +1,113 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+.bttn {
+    border-radius: 15px;
+    background-color: var(--bg2);
+    color: var(--text);
+    padding: .5em;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all .1s ease-in;
+    cursor: pointer;
+}
+
+.bttn.active {
+    background-color: var(--bg3);
+    color: var(--text);
+}
+
+.bttns-wrapper {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    justify-content: center;
+    width: 250px;
+}
+
+.bttns-wrapper > .bttn {
+    flex: 1 1;
+}
+
+.difficult-radio, .zen-checkbox {
+    display: none;
+}
+
+.bttn > label {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.option-wrapper {
+    position: relative;
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.option-wrapper h3 {
+    font-weight: normal;
+    font-size: 1em;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+input {
+
+    border: none;
+}
+
+/* SVG */
+
+.logo-svg {
+    width: 400px;
+}
+
+.logo-svg > path, .svg-footer > path {
+    fill: var(--dark-color)
+}
+
+.svg-footer {
+    --size: 3em;
+    height: var(--size);
+    width: var(--size);
+    cursor: pointer;
+}
+
+.svg-label {
+    --size: 30px;
+    width: var(--size);
+    height: var(--size);
+}
+
+/* Footer */
+
+.home-footer {
+    position: fixed;
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    gap: .75rem;
+    bottom: 20px;
+    right: 20px;
+}

@@ -1,0 +1,133 @@
+.main-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    min-height: 100vh;
+}
+
+#board {
+    display: grid;
+    grid-gap: 5px;
+    max-width: calc(var(--table-size) * var(--card-size) + ((var(--table-size) - 1) * 10px));
+    /* box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, .2); */
+}
+
+.cell-front,
+.cell-back {
+  transition:
+    transform 0.5s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.cell.reveal .cell-front {
+  transform: rotateY(180deg);
+}
+
+.cell.reveal .cell-back {
+  transform: rotateY(0deg);
+}
+
+.cell {
+    position: relative;
+    aspect-ratio: 1/1;
+    width: var(--cell-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    /* overflow: hidden; */
+}
+
+.cell-front,
+.cell-back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    backface-visibility: hidden;
+    /* transition: transform .5s ease,
+                background-color .2s ease,
+                color .2s ease; */
+}
+
+.cell .cell-front { transform: rotateY(0deg); }
+.cell .cell-back { transform: rotateY(-180deg); }
+/* .cell.reveal .cell-front { transform: rotateY(180deg); }
+.cell.reveal .cell-back { transform: rotateY(0deg); } */
+
+.cell-front {
+    background-color: var(--bg2)
+}
+
+.cell-back {
+    background-color: var(--bg3);
+}
+
+.cell[data-num="1"] .cell-back { color: #d9ed92;}
+.cell[data-num="2"] .cell-back { color: #b5e48c;}
+.cell[data-num="3"] .cell-back { color: #99d98c;}
+.cell[data-num="4"] .cell-back { color: #76c893;}
+.cell[data-num="5"] .cell-back { color: #52b69a;}
+.cell[data-num="6"] .cell-back { color: #34a0a4;}
+.cell[data-num="7"] .cell-back { color: #168aad;}
+.cell[data-num="8"] .cell-back { color: #1a759f;}
+
+
+.cell:not(.reveal) {
+    cursor: pointer;
+}
+
+.cell.reveal {
+    cursor: default;
+}
+
+.cell::after {
+    aspect-ratio: 1/1;
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    border-radius: 5px;
+
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 5;
+
+    background-image: url('./images/flag.svg');
+    background-size: 75%;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    transform: scale(2);
+    opacity: 0;
+    transition: all .2s ease;
+}
+
+.cell.flag::after {
+    transform: scale(1);
+    opacity: 1;
+    transition: all .2s ease;
+}
+
+.mine {
+    background-color: black;
+}
+
+.reset-button {
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: .3em .5em;
+    border-radius: 5px;
+}
