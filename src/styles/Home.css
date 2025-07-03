@@ -79,25 +79,11 @@ input {
 
 /* SVG */
 
-.logo-svg {
-    width: 400px;
-}
-
-.logo-svg > path, .svg-footer > path {
-    fill: var(--dark-color)
-}
-
 .svg-footer {
-    --size: 3em;
+    --size: 2rem;
     height: var(--size);
     width: var(--size);
     cursor: pointer;
-}
-
-.svg-label {
-    --size: 30px;
-    width: var(--size);
-    height: var(--size);
 }
 
 /* Footer */
@@ -105,9 +91,24 @@ input {
 .home-footer {
     position: fixed;
     display: flex;
-    align-items: end;
+    flex-direction: row-reverse;
+    align-items: center;
     justify-content: end;
+    font-size: inherit;
     gap: .75rem;
     bottom: 20px;
     right: 20px;
+}
+
+.home-footer > * {
+    opacity: 1;
+    transition: all .2s ease;
+}
+
+.home-footer a:hover, .home-footer button:hover {
+    opacity: 0.8;
+}
+
+.button-footer {
+    display: flex;
 }

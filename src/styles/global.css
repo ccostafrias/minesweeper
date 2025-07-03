@@ -31,12 +31,11 @@ input, button {
 }
 
 html {
+    overflow: hidden;
     --bg: #1e1e1e;
     --bg2: #3c3d3f;
     --bg3: #292929;
     --text: #abb2bf;
-    --red: #862f2f;
-    --green: #2e8f2e;
 }
 
 html.dark {
@@ -44,8 +43,6 @@ html.dark {
     --bg2: #d6d7db;
     --bg3: #c7c7c7;
     --text: #383a42;
-    --red: #bd3030;
-    --green: #2bb32b;
 }
 
 body, button, input, textarea, a {

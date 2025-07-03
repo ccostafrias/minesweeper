@@ -1,9 +1,17 @@
 import Cell from "./Cell";
-import { useMinesweeper } from "../hooks/useMineSweeper";
-import "../styles/Board.css"
+import { useEffect } from "react";
 
-export default function Board({ size, mines }) {
-  const { board, revealCell, toggleFlag, resetGame } = useMinesweeper(size, mines);
+export default function Board(props) {
+  const { 
+    board, 
+    revealCell, 
+    toggleFlag, 
+    size,
+  } = props
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--board-size', size);
+  }, [board]);
 
   return (
     <>
@@ -18,7 +26,7 @@ export default function Board({ size, mines }) {
         {board.map((row, rIdx) =>
           row.map((cell, cIdx) => (
             <Cell
-              key={`${rIdx}-${cIdx}`}
+              key={`${rIdx}-${cIdx}}`}
               z={(size - rIdx) * size - cIdx}
               cell={cell}
               onClick={() => {
@@ -31,7 +39,6 @@ export default function Board({ size, mines }) {
           ))
         )}
       </div>
-      <button className="reset-button" onClick={resetGame}>Reset</button>
     </>
   );
 }

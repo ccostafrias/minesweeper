@@ -1,7 +1,5 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDifficulty } from '../contexts/DifficultyContext';
-import { FaGithub } from "react-icons/fa";
 import "../styles/Home.css"
 
 export default function Home() {
@@ -83,11 +81,6 @@ export default function Home() {
             </form>
             
         </main>
-        <footer className="home-footer">
-            <a href="https://github.com/ccostafrias" target="_blank">
-                <FaGithub className="svg-footer"/>
-            </a>
-        </footer>
     </>
   );
 }

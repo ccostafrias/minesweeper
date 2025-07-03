@@ -1,11 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export function useMinesweeper(size, numMines) {
+  const [gameStatus, setGameStatus] = useState('playing')
+  const [gameId, setGameId] = useState(0);
   const [board, setBoard] = useState(() => generateEmptyBoard(size));
   const [firstClick, setFirstClick] = useState(true);
   const [isLocked, setIsLocked] = useState(false);
+  const [time, setTime] = useState(0);
 
   const delay = 50;
+
+  useEffect(() => {
+    if (firstClick|| isLocked) return;
+
+    const interval = setInterval(() => {
+      setTime(prev => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [firstClick, isLocked]);
+
+  // calcula quantas bandeiras restam, usando useMemo
+  // useMemo = cumpre a função de um useEffect, mas como as bandeiras podem ser calculadas a partir de OUTRO valor já existente, utilizamos useMemo
+  const flagsLeft = useMemo(() => {
+    const flattened = board.flat()
+
+    const totalFlags = flattened.filter(cell => cell.isFlagged).length; // calcula o total de flags no tabuleiro
+
+    const allSafeCells = flattened.filter(cell => !cell.isMine);
+    const allSafeCellsAreRevealed = allSafeCells.every(cell => cell.isRevealed);
+    const totalSafeCellsCount = allSafeCells.length; // contar o número total de células seguras
+
+    if (allSafeCellsAreRevealed && totalSafeCellsCount > 0) {
+      console.log("Todas as células seguras foram reveladas! Você venceu!");
+      setGameStatus('won');
+      setIsLocked(true);
+      // onAllSafeCellsRevealed(); // Chama a função de vitória
+    }
+    return numMines - totalFlags;
+  }, [board, numMines]);
+  
 
   function generateEmptyBoard(s) {
     return Array.from({ length: s }, (_, row) =>
@@ -38,7 +72,6 @@ export function useMinesweeper(size, numMines) {
     return newBoard;
   }
 
-
   function isNear(r, c, safeR, safeC) {
     return Math.abs(r - safeR) <= 1 && Math.abs(c - safeC) <= 1;
   }
@@ -54,6 +87,38 @@ export function useMinesweeper(size, numMines) {
       }
     }
   }
+
+  const revealAllBombs = (excludedRow, excludedCol) => {
+    // achar todas as bombas (elementos com isMine: true)
+    const bombs = board
+      .flat()
+      .filter(c => {
+        if (c.row == excludedRow && c.col == excludedCol) return false
+        if (c.isFlagged) return false
+        if (!c.isMine) return false
+        return true
+      })
+      .sort(() => Math.random() - 0.5)
+
+    // adicionar a chave `bombDelay` com valores crescentes e taxas aleatórias
+    let currentDelay = 0;
+    const bombsWithDelay = bombs.map(bomb => {
+      const delayIncrement = Math.random() * 600 + 100;
+      // const delayIncrement = 400;
+      currentDelay += delayIncrement;
+      return { ...bomb, revealDelay: parseFloat(currentDelay.toFixed(2)), isRevealed: true }; // Arredonda para 2 casas decimais
+    });
+
+    const newBoard = board.map(row =>
+      row.map(cell => {
+        const foundBomb = bombsWithDelay.find(b => b.row === cell.row && b.col === cell.col);
+        if (foundBomb) return foundBomb;
+        if (cell.col == excludedCol && cell.row == excludedRow) return {...cell, isRevealed: true};
+        return cell;
+      })
+    );
+    setBoard(newBoard);
+  };
 
   function revealCell(row, col) {
     if (isLocked) return;
@@ -72,8 +137,7 @@ export function useMinesweeper(size, numMines) {
     }
 
     if (cell.isMine) {
-      cell.isRevealed = true;
-      setBoard(newBoard);
+      revealAllBombs(row, col);
       setIsLocked(true);
       return;
     }
@@ -117,10 +181,23 @@ export function useMinesweeper(size, numMines) {
   }
 
   function resetGame() {
+    setBoard(prev => prev.map(c => ({...c, isRevealed: false})))
     setBoard(generateEmptyBoard(size, size));
     setFirstClick(true);
     setIsLocked(false);
+    setTime(0)
+    setGameId(prev => prev + 1)
+    setGameStatus('playing')
   }
 
-  return { board, revealCell, toggleFlag, resetGame };
+  return { 
+    board, 
+    flagsLeft, 
+    time, 
+    gameId,
+    gameStatus,
+    revealCell, 
+    toggleFlag, 
+    resetGame,
+   };
 }
