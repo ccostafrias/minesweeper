@@ -1,0 +1,79 @@
+/* Overlay padrão */
+.ReactModal__Overlay {
+    --delay: 600ms;
+    opacity: 0;
+    transition: opacity 200ms ease-in-out;
+    transition-delay: var(--delay);
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 300;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Quando o modal é aberto */
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+/* Quando o modal está fechando */
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+  transition-delay: 0ms; /* sem delay ao fechar */
+}
+
+/* Conteúdo do modal */
+.ReactModal__Content {
+    background: transparent;
+    border: none;
+    outline: none;
+    max-width: 400px;
+    width: 90%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    transform: translateY(-100px);
+    opacity: 0;
+    transition: transform 400ms ease-in-out, opacity 400ms ease-in-out;
+    transition-delay: var(--delay);
+}
+
+/* Animação ao abrir */
+.ReactModal__Content--after-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Animação ao fechar */
+.ReactModal__Content--before-close {
+  transform: translateY(-20px);
+  opacity: 0;
+  transition-delay: 0ms;
+}
+
+/* Estilo das partes do modal */
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.modal-content {
+  background-color: var(--bg);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  width: 100%;
+}
+
+.modal-footer {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}

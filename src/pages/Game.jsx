@@ -9,11 +9,13 @@ import { RiResetLeftFill } from "react-icons/ri";
 import { FaClock } from "react-icons/fa";
 
 import Board from "../components/Board";
+import CustomModal from '../components/CustomModal';
 import "../styles/Board.css";
 import { ConfettiExplosion } from 'react-confetti-explosion';
 
 const DIFFICULTY_CONFIG = {
-  easy: { size: 7, mines: 6 },
+//   easy: { size: 7, mines: 6 },
+  easy: { size: 7, mines: 1 },
   medium: { size: 10, mines: 12 },
   hard: { size: 15, mines: 30 },
 };
@@ -30,6 +32,7 @@ export default function Game() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [showConfetti, setShowConfetti] = useState(false)
+    const [modalOpen, setModalOpen] = useState()
 
     // Acessando um query parameter específico
     const difficulty = searchParams.get('difficulty') || 'easy';
@@ -41,17 +44,45 @@ export default function Game() {
         time, 
         gameId,
         gameStatus,
+        setGameStatus,
         revealCell, 
         toggleFlag, 
         resetGame,
     } = useMinesweeper(size, mines);
 
     useEffect(() => {
-        if (gameStatus == 'won') setShowConfetti(true)
+        if (gameStatus == 'won' || gameStatus == 'lost') {
+            if (gameStatus == 'won') setShowConfetti(true)
+            setModalOpen(true)
+        }
     }, [gameStatus])
+
+    useEffect(() => {
+    })
+
+    const handleConfettiCompleted = () => {
+        setShowConfetti(false)
+        // setModalOpen(true)
+    }
 
     return (
         <>
+            <CustomModal 
+                isOpen={modalOpen} 
+                onRequestClose={() => {}}
+                onAfterClose={resetGame}
+                title={gameStatus == 'won' ? "YOU WON!" : "YOU LOST..."}
+                footer={
+                    <>
+                        <button onClick={() => navigate('/')}>Home</button>
+                        <button onClick={() => setModalOpen(false)}>Restart</button>
+                    </>
+                }
+            >
+                <p>Dificuldade: {difficulty}</p>
+                {/* <p>Flagged right: {flaggedCorrectly} / {mines}</p> */}
+                <p>Time: {formatTime(time)}</p>
+            </CustomModal>
             {showConfetti && (
                 <div style={{
                     position: 'fixed',
@@ -61,7 +92,7 @@ export default function Game() {
                     pointerEvents: 'none',
                     zIndex: 200
                 }}>
-                    <ConfettiExplosion {...confettiProps} onComplete={() => setShowConfetti(false)}/>
+                    <ConfettiExplosion {...confettiProps} onComplete={handleConfettiCompleted}/>
                 </div>
             )}
             <div className="main-game">

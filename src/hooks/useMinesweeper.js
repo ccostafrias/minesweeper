@@ -196,6 +196,7 @@ export function useMinesweeper(size, numMines) {
     time, 
     gameId,
     gameStatus,
+    setGameStatus,
     revealCell, 
     toggleFlag, 
     resetGame,
