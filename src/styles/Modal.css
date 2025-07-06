@@ -1,18 +1,27 @@
+.ReactModalPortal {
+  height: 100vh;
+  width: 100vw;
+}
+
 /* Overlay padrão */
 .ReactModal__Overlay {
-    --delay: 600ms;
-    opacity: 0;
-    transition: opacity 200ms ease-in-out;
+  --delay: 600ms;
+  opacity: 0;
+  /* font-size: 1.5em; */
+  transition: opacity 200ms ease-in-out;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 500;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ReactModal__Overlay:has(> .delay), .ReactModal__Content:has(.delay) {
     transition-delay: var(--delay);
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 300;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 /* Quando o modal é aberto */
@@ -31,7 +40,8 @@
     background: transparent;
     border: none;
     outline: none;
-    max-width: 400px;
+    max-width: 450px;
+    font-size: 1.3em;
     width: 90%;
     padding: 0;
     display: flex;
@@ -41,7 +51,10 @@
     transform: translateY(-100px);
     opacity: 0;
     transition: transform 400ms ease-in-out, opacity 400ms ease-in-out;
-    transition-delay: var(--delay);
+}
+
+.ReactModal__Content:has(.instruction-img) {
+  max-width: 550px;
 }
 
 /* Animação ao abrir */
@@ -59,21 +72,161 @@
 
 /* Estilo das partes do modal */
 .modal-title {
-  font-size: 1.8rem;
+  font-size: 1.8em;
   font-weight: bold;
   margin-bottom: 1rem;
 }
 
 .modal-content {
-  background-color: var(--bg);
+  max-height: 80vh;
+  background-color: var(--bg2);
   border-radius: 12px;
-  padding: 1rem 1.5rem;
+  padding: 1.5em;
   width: 100%;
+  overflow-y: auto;
+  
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #555 var(--bg3); /* Firefox (thumb track) */
 }
 
 .modal-footer {
-  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  width: 100%;
+  margin-top: .5rem;
+  gap: .5rem;
+}
+
+.win-container {
   display: flex;
-  justify-content: space-around;
-  gap: 1rem;
+  flex-direction: column;
+  gap: .5em;
+}
+
+.win-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.best-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.shine-wrapper {
+  position: relative;
+}
+
+.new-best, .new-best-shine {
+  display: inline-block;
+	color: var(--text);
+  font-weight: bold;
+  position: relative;
+  bottom: 4px;
+  font-size: .5em;
+  animation: growing 2s ease-in-out infinite;
+}
+
+.new-best-shine {
+  position: absolute;
+  z-index: 500;
+  background: linear-gradient(to right, transparent 0%, #fff 10%, transparent 20%) no-repeat;
+	/* background-size: 200%; */
+  background-repeat: no-repeat;
+  background-position: 0;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+	background-clip: text;
+  animation: growing 2s ease-in-out infinite,
+             shine 3s infinite linear;
+  animation-fill-mode: none, forwards;
+}
+
+@keyframes shine {
+   0% {
+    background-position: -80px;
+   }
+   80% {
+    background-position: 100px;
+   }
+   100% {
+    background-position: 200px;
+   }
+}
+
+@keyframes growing {
+  0%, 100% {transform: scale(0.95);}
+  50% {transform: scale(1.05);}
+}
+
+.win-label {
+  font-weight: bold;
+}
+
+.modal-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-grow: 1;
+  background-color: var(--bg2);
+  border-radius: 10px;
+  padding: .4em 1em;
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* INTRUÇÕES */
+
+.instruction-step {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2em;
+}
+
+.instruction-img {
+  display: block;
+  max-width: 200px;
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
+
+  height: auto;
+}
+
+.intructions-text--wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .5em;
+}
+
+.instructions-wrapper {
+  font-size: .8em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.instructions-number {
+  position: relative;
+  padding: .7em;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--text);
+  color: var(--bg);
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.instructions-number span {
+  position: absolute;
 }

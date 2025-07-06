@@ -1,9 +1,12 @@
+import React from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDifficulty } from '../contexts/DifficultyContext';
+import { motion } from 'framer-motion' // 'framer-motion/dist/framer-motion'
 import "../styles/Home.css"
 
 export default function Home() {
-    const { difficulty, setDifficulty } = useDifficulty();
+    const { difficulty, setDifficulty, pageTransition, pageVariants } = useDifficulty();
+
     const navigate = useNavigate();
 
     function handleStartGame() {
@@ -28,7 +31,20 @@ export default function Home() {
     }
 
   return (
-    <>
+    <motion.div
+        // initial={{ y: "-20%", opacity: 0 }}
+        // animate={{ y: 0, opacity: 1 }}
+        // exit={{ y: "20%", opacity: 0 }}
+        // transition={{
+        //     y: { duration: 0.5, ease: "easeInOut" },
+        //     opacity: { duration: 0.3, ease: "linear" },
+        // }}
+        variants={pageVariants}
+        initial="initial"
+        animate="in"
+        exit="out"
+        transition={pageTransition}
+    >
         <main className="home">
             <header className="header-menu">
                 {/* <Logo className="logo-svg"/> */}
@@ -36,7 +52,7 @@ export default function Home() {
             </header>
             <form onSubmit={handleSubmit}>
                 <div className="option-wrapper">
-                    <h3>Difficult:</h3>
+                    <h3>Difficulty:</h3>
                         <div className="bttns-wrapper">
                             <input 
                                 type="radio" 
@@ -81,6 +97,6 @@ export default function Home() {
             </form>
             
         </main>
-    </>
+    </motion.div>
   );
 }

@@ -8,7 +8,7 @@
 }
 
 #board {
-    display: grid;
+    display: none;
     gap: calc(min(90vmin, 500px) / (var(--board-size) * 10));
     width: min(90vmin, 500px);
     font-size: calc(min(90vmin, 500px) / (var(--board-size) * 5));
@@ -36,16 +36,16 @@
     position: relative;
     aspect-ratio: 1/1;
     width: 100%;
-    /* width: var(--cell-size); */
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2em;
-    /* font-size: 10vw; */
     font-weight: bold;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    user-select: none;
+    will-change: transform;
+    /* transform-style: preserve-3d; */
+    /* perspective: 1000px; */
+    /* contain: paint; */
     /* overflow: hidden; */
 }
 
@@ -61,15 +61,10 @@
     height: 100%;
     border-radius: 5px;
     backface-visibility: hidden;
-    /* transition: transform .5s ease,
-                background-color .2s ease,
-                color .2s ease; */
 }
 
 .cell .cell-front { transform: rotateY(0deg); }
 .cell .cell-back { transform: rotateY(-180deg); }
-/* .cell.reveal .cell-front { transform: rotateY(180deg); }
-.cell.reveal .cell-back { transform: rotateY(0deg); } */
 
 .cell-front {
     background-color: var(--bg2)

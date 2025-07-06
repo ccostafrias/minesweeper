@@ -98,6 +98,13 @@ input {
     gap: .75rem;
     bottom: 20px;
     right: 20px;
+    z-index: 400;
+}
+
+@media (max-width: 600px) {
+    .svg-footer {
+        --size: 1.5rem;
+    }
 }
 
 .home-footer > * {

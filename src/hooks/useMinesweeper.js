@@ -1,6 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 
-export function useMinesweeper(size, numMines) {
+export function useMinesweeper(size, numMines, difficulty) {
+  const [isNewBestTime, setIsNewBestTime] = useState(false)
+  const [bestTime, setBestTime] = useState(() => {
+    const saved = localStorage.getItem('ms-bt')
+    return saved ? JSON.parse(saved) : {}
+  }) // 'ms-bt' = minesweeper best times
   const [gameStatus, setGameStatus] = useState('playing')
   const [gameId, setGameId] = useState(0);
   const [board, setBoard] = useState(() => generateEmptyBoard(size));
@@ -32,7 +37,12 @@ export function useMinesweeper(size, numMines) {
     const totalSafeCellsCount = allSafeCells.length; // contar o número total de células seguras
 
     if (allSafeCellsAreRevealed && totalSafeCellsCount > 0) {
-      console.log("Todas as células seguras foram reveladas! Você venceu!");
+      if ((!bestTime[difficulty] && bestTime[difficulty] != 0) || bestTime[difficulty] > time) {
+        const newBestTime = {...bestTime, [difficulty]: time}
+        setBestTime(newBestTime)
+        setIsNewBestTime(true)
+        localStorage.setItem('ms-bt', JSON.stringify(newBestTime))
+      }
       setGameStatus('won');
       setIsLocked(true);
       // onAllSafeCellsRevealed(); // Chama a função de vitória
@@ -118,6 +128,7 @@ export function useMinesweeper(size, numMines) {
       })
     );
     setBoard(newBoard);
+    setGameStatus('lost')
   };
 
   function revealCell(row, col) {
@@ -188,6 +199,7 @@ export function useMinesweeper(size, numMines) {
     setTime(0)
     setGameId(prev => prev + 1)
     setGameStatus('playing')
+    setIsNewBestTime(false)
   }
 
   return { 
@@ -196,7 +208,8 @@ export function useMinesweeper(size, numMines) {
     time, 
     gameId,
     gameStatus,
-    setGameStatus,
+    bestTime: bestTime[difficulty],
+    isNewBestTime,
     revealCell, 
     toggleFlag, 
     resetGame,

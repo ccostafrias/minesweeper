@@ -1,7 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useMinesweeper } from "../hooks/useMineSweeper";
+import { ConfettiExplosion } from 'react-confetti-explosion';
 import { formatTime } from '../utils/formatTime';
+import { motion } from 'framer-motion';
+import { useDifficulty } from '../contexts/DifficultyContext';
 
 import { FaFlag } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
@@ -11,11 +14,10 @@ import { FaClock } from "react-icons/fa";
 import Board from "../components/Board";
 import CustomModal from '../components/CustomModal';
 import "../styles/Board.css";
-import { ConfettiExplosion } from 'react-confetti-explosion';
 
 const DIFFICULTY_CONFIG = {
-//   easy: { size: 7, mines: 6 },
-  easy: { size: 7, mines: 1 },
+    // easy: { size: 7, mines: 1 },
+  easy: { size: 7, mines: 6 },
   medium: { size: 10, mines: 12 },
   hard: { size: 15, mines: 30 },
 };
@@ -30,9 +32,11 @@ const confettiProps = {
 
 export default function Game() {
     const navigate = useNavigate();
+
     const [searchParams] = useSearchParams();
     const [showConfetti, setShowConfetti] = useState(false)
-    const [modalOpen, setModalOpen] = useState()
+    const [modalOpen, setModalOpen] = useState(false)
+    const { pageTransition, pageVariants } = useDifficulty();
 
     // Acessando um query parameter específico
     const difficulty = searchParams.get('difficulty') || 'easy';
@@ -44,11 +48,12 @@ export default function Game() {
         time, 
         gameId,
         gameStatus,
-        setGameStatus,
+        bestTime,
+        isNewBestTime,
         revealCell, 
         toggleFlag, 
         resetGame,
-    } = useMinesweeper(size, mines);
+    } = useMinesweeper(size, mines, difficulty);
 
     useEffect(() => {
         if (gameStatus == 'won' || gameStatus == 'lost') {
@@ -66,22 +71,58 @@ export default function Game() {
     }
 
     return (
-        <>
+        <div>
             <CustomModal 
                 isOpen={modalOpen} 
+                hasDelay={true}
                 onRequestClose={() => {}}
                 onAfterClose={resetGame}
+                shouldClose={false}
                 title={gameStatus == 'won' ? "YOU WON!" : "YOU LOST..."}
                 footer={
                     <>
-                        <button onClick={() => navigate('/')}>Home</button>
-                        <button onClick={() => setModalOpen(false)}>Restart</button>
+                        <button className='modal-button' onClick={() => {
+                            setModalOpen(false)
+                            navigate('/')
+                        }}>
+                            <FaHome/>
+                            <span>Home</span>
+                        </button>
+                        <button autoFocus={true} className='modal-button' onClick={() => setModalOpen(false)}>
+                            <RiResetLeftFill/>
+                            <span>Restart</span>
+                        </button>
                     </>
                 }
             >
-                <p>Dificuldade: {difficulty}</p>
+                <div className='win-container'>
+                    <div className='win-wrapper'>
+                        <span className='win-label'>Difficulty:</span>
+                        <span style={{textTransform: 'uppercase'}}>{difficulty}</span>
+                    </div>
+                    {/* <div className='win-wrapper'>
+                        <span className='win-label'>Flagged right:</span>
+                        <span>---</span>
+                    </div> */}
+                    <div className='win-wrapper'>
+                        <span className='win-label'>Time:</span>
+                        <span>{gameStatus == 'won' ? formatTime(time) : '---'}</span>
+                    </div>
+                    <div className='win-wrapper'>
+                        <span className='win-label'>Best time:</span>
+                        <div className='best-wrapper'>
+                            {isNewBestTime && (
+                                <div className='shine-wrapper'>
+                                    <span className='new-best-shine'>New Best Time!</span>
+                                    <span className='new-best'>New Best Time!</span>
+                                </div>
+                            )}
+                            <span>{bestTime >= 0 ? formatTime(bestTime) : '---'}</span>
+                        </div>
+                    </div>
+                </div>
+
                 {/* <p>Flagged right: {flaggedCorrectly} / {mines}</p> */}
-                <p>Time: {formatTime(time)}</p>
             </CustomModal>
             {showConfetti && (
                 <div style={{
@@ -90,12 +131,19 @@ export default function Game() {
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                     pointerEvents: 'none',
-                    zIndex: 200
+                    zIndex: 300
                 }}>
                     <ConfettiExplosion {...confettiProps} onComplete={handleConfettiCompleted}/>
                 </div>
             )}
-            <div className="main-game">
+            <motion.div 
+                className="main-game"
+                variants={pageVariants}
+                initial="initial"
+                animate="in"
+                exit="out"
+                transition={pageTransition}
+            >
                 <div className="board-ui">
                     <button className="icon-wrapper" onClick={() => navigate('/')}>
                         <FaHome className="board-ui--icon" size={"2rem"}/>
@@ -119,7 +167,7 @@ export default function Game() {
                     toggleFlag={toggleFlag}
                     gameId={gameId}
                 />
-            </div>
-        </>
+            </motion.div>
+        </div>
     );
 }

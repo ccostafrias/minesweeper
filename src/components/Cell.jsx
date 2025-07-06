@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaFlag } from "react-icons/fa";
 import { FaBomb } from "react-icons/fa";
@@ -6,16 +6,26 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import { getCssVarInSeconds } from './../utils/getCssVarInSeconds';
 
 const confettiProps = {
+  className: 'teste',
   force: 0.2,
   duration: 2200,
   particleCount: 15,
-  width: 400,
-  zIndex: 200,
-  colors: [
-  '#dcdcdd',
-  '#c5c3c6',
-  '#46494c',
-  '#4c5c68',
+  particleSize: 5,
+  width: 300,
+  height: '120vh',
+  zIndex: 300,
+  // colors: [
+  // '#dcdcdd',
+  // '#c5c3c6',
+  // '#46494c',
+  // '#4c5c68',
+  // ],
+    colors: [
+  '#370617',
+  '#9d0208',
+  '#dc2f02',
+  '#f48c06',
+  '#faa307',
   ],
 };
 
@@ -47,7 +57,6 @@ export default function Cell({ z, cell, onClick, onRightClick}) {
 
   const handleTransition = (isMine) => {
     if (!isMine) return
-    // console.log(e.target, e.nativeEvent)
     setShowConfetti(true)
   }
 
@@ -56,14 +65,6 @@ export default function Cell({ z, cell, onClick, onRightClick}) {
         setShowConfetti(false);
       }
 
-      // if (cell.isRevealed && cell.isMine) {
-      //   const timeout = setTimeout(() => {
-      //     console.log(revealDelay)
-      //     setShowConfetti(true);
-      //   }, revealDelay);
-
-      //   return () => clearTimeout(timeout);
-      // }
     }, [cell.isRevealed, cell.isMine]);
 
   return (
@@ -120,7 +121,9 @@ export default function Cell({ z, cell, onClick, onRightClick}) {
                   >
                     <FaBomb className="cell-icon" />  
                   </motion.div>
-                  {showConfetti &&  <ConfettiExplosion {...confettiProps} onComplete={() => setShowConfetti(false)}/>}
+                  {showConfetti &&  (
+                      <ConfettiExplosion {...confettiProps} onComplete={() => setShowConfetti(false)}/>
+                  )}
                 </>
               )}
 
