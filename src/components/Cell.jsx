@@ -4,6 +4,7 @@ import { FaFlag } from "react-icons/fa";
 import { FaBomb } from "react-icons/fa";
 import ConfettiExplosion from 'react-confetti-explosion';
 import { getCssVarInSeconds } from './../utils/getCssVarInSeconds';
+import { useLongPress } from '@uidotdev/usehooks';
 
 const confettiProps = {
   className: 'teste',
@@ -40,13 +41,6 @@ export default function Cell({ z, cell, onClick, onRightClick}) {
 
   const [exitX, setExitX] = useState(0);
 
-  // Gera nova direção lateral ao desmarcar a bandeira
-  useEffect(() => {
-    if (!cell.isFlagged) {
-      setExitX(getRandomOffset());
-    }
-  }, [cell.isFlagged]);
-
   function getRandomOffset() {
     const distance = Math.floor(Math.random() * 30 + 10); // 10 ~ 40px
     const direction = Math.random() < 0.5 ? -1 : 1;
@@ -60,19 +54,38 @@ export default function Cell({ z, cell, onClick, onRightClick}) {
     setShowConfetti(true)
   }
 
-    useEffect(() => {
-      if (!cell.isRevealed || !cell.isMine) {
-        setShowConfetti(false);
-      }
+  // Gera nova direção lateral ao desmarcar a bandeira
+  useEffect(() => {
+    if (!cell.isFlagged) {
+      setExitX(getRandomOffset());
+    }
+  }, [cell.isFlagged]);
 
-    }, [cell.isRevealed, cell.isMine]);
+  useEffect(() => {
+    if (!cell.isRevealed || !cell.isMine) {
+      setShowConfetti(false);
+    }
+
+  }, [cell.isRevealed, cell.isMine]);
+
+  const attrs = useLongPress(onRightClick, {
+    threshold: 500,
+    onCancel: (event) => {
+      const {nativeEvent} = event
+      if (nativeEvent.type.startsWith("touch") || nativeEvent.button === 0) {
+        return onClick()
+      } else if (nativeEvent.button === 2) {
+        return onRightClick(nativeEvent)
+      }
+      console.log(event.nativeEvent.type)
+    },
+  })
 
   return (
     <button
         className={classNames.join(" ")}
         {...(!cell.isMine && { 'data-num': cell.adjacentMines || undefined })}
-        onClick={onClick}
-        onContextMenu={onRightClick}
+        {...attrs}
         style={{ zIndex: z }}
     >
         <div className="cell-front" style={style}>
