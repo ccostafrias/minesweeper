@@ -27,14 +27,15 @@ export default function Board(props) {
         {board.map((row, rIdx) =>
           row.map((cell, cIdx) => (
             <Cell
-              key={`${rIdx}-${cIdx}}`}
+              key={`${rIdx}-${cIdx}`}
               z={(size - rIdx) * size - cIdx}
               cell={cell}
-              onClick={() => {
-                revealCell(rIdx, cIdx)}}
+              onClick={() => revealCell(rIdx, cIdx)}
               onRightClick={(e) => {
-                e.preventDefault();
-                toggleFlag(rIdx, cIdx);
+                if (e.cancelable) {
+                  e.preventDefault()
+                }
+                toggleFlag(rIdx, cIdx)
               }}
             />
           ))

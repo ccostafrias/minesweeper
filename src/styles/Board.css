@@ -42,6 +42,7 @@
     font-size: 2em;
     font-weight: bold;
     user-select: none;
+    touch-action: none;
     will-change: transform;
     /* transform-style: preserve-3d; */
     /* perspective: 1000px; */
