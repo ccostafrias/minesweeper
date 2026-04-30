@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@uidotdev/usehooks": "^2.4.1",
     "framer-motion": "^12.22.0",
     "react": "^19.1.0",
     "react-confetti-explosion": "^3.0.3",
